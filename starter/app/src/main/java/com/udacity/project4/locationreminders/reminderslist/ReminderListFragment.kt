@@ -2,6 +2,7 @@ package com.udacity.project4.locationreminders.reminderslist
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
@@ -18,11 +19,13 @@ import timber.log.Timber
 class ReminderListFragment : BaseFragment() {
     //use Koin to retrieve the ViewModel instance
     override val _viewModel: RemindersListViewModel by viewModel()
+
     private lateinit var binding: FragmentRemindersBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding =
             DataBindingUtil.inflate(
                 inflater,
@@ -46,6 +49,14 @@ class ReminderListFragment : BaseFragment() {
         binding.addReminderFAB.setOnClickListener {
             navigateToAddReminder()
         }
+
+        binding.viewModel?.showErrorMessage?.observe(viewLifecycleOwner, {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.error_happened),
+                Toast.LENGTH_SHORT
+            ).show()
+        })
     }
 
     override fun onResume() {

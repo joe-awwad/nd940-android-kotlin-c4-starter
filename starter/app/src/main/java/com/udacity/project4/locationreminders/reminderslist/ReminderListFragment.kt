@@ -3,6 +3,8 @@ package com.udacity.project4.locationreminders.reminderslist
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -11,6 +13,7 @@ import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import com.udacity.project4.utils.setTitle
 import com.udacity.project4.utils.setup
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class ReminderListFragment : BaseFragment() {
     //use Koin to retrieve the ViewModel instance
@@ -71,7 +74,13 @@ class ReminderListFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logout -> {
-//                TODO: add the logout implementation
+                val user = FirebaseAuth.getInstance().currentUser
+                user?.let {
+                    AuthUI.getInstance()
+                        .signOut(requireContext())
+                        .addOnCompleteListener { Timber.d("User ${user.email} logged out") }
+                        .addOnFailureListener { Timber.d(it, "User ${user.email} logout failed") }
+                }
             }
         }
         return super.onOptionsItemSelected(item)

@@ -3,22 +3,26 @@ package com.udacity.project4.utils
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
-import android.net.ConnectivityManager
-import android.util.Log
+import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.udacity.project4.authentication.AuthenticationActivity
 import com.udacity.project4.base.BaseRecyclerViewAdapter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
+import com.udacity.project4.locationreminders.RemindersActivity
 
+fun FirebaseAuth.isLoggedIn(): Boolean = currentUser != null
+
+fun Context.goToAuthenticationActivity(){
+    startActivity(Intent(this, AuthenticationActivity::class.java))
+}
+
+fun Context.goToRemindersActivity(){
+    startActivity(Intent(this, RemindersActivity::class.java))
+}
 
 /**
  * Extension function to setup the RecyclerView

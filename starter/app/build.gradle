@@ -83,7 +83,7 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
 
     // Firebase Auth SDK
-    implementation 'com.firebaseui:firebase-ui-auth:5.0.0'
+    implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
 
 
     // Timber

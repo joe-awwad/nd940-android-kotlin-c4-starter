@@ -49,14 +49,6 @@ class ReminderListFragment : BaseFragment() {
         binding.addReminderFAB.setOnClickListener {
             navigateToAddReminder()
         }
-
-        binding.viewModel?.showErrorMessage?.observe(viewLifecycleOwner, {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.error_happened),
-                Toast.LENGTH_SHORT
-            ).show()
-        })
     }
 
     override fun onResume() {

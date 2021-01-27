@@ -7,6 +7,7 @@
     <string name="reminder_desc">Description</string>
     <string name="reminder_location">Reminder Location</string>
     <string name="save">Save</string>
+    <string name="select">Select</string>
     <string name="reminder_saved">Reminder Saved !</string>
     <string name="logout">Logout</string>
     <string name="welcome_to_the_location_reminder_app">Welcome to the location reminder app</string>
@@ -40,4 +41,9 @@
     <string name="geofence_too_many_geofences">Your app has registered too many geofences.</string>
     <string name="geofence_too_many_pending_intents">You have provided too many PendingIntents to the addGeofences() call.</string>
     <string name="error_adding_geofence">Error Happened, Can\'t Add Geofence</string>
+
+    <string name="ok">OK</string>
+    <string name="save_button">Save button</string>
+    <string name="location_access_denied_title">Access to Location Denied</string>
+    <string name="location_access_denied_description">"The app need access to your location to correctly set the reminders."</string>
 </resources>

@@ -31,6 +31,7 @@ class AuthenticationActivity : AppCompatActivity() {
 
         if (FirebaseAuth.getInstance().isLoggedIn()) {
             goToRemindersActivity()
+            finish()
         }
 
 //          TODO: a bonus is to customize the sign in flow to look nice using :

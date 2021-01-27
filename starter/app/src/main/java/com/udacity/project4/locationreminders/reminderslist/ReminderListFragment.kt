@@ -2,7 +2,6 @@ package com.udacity.project4.locationreminders.reminderslist
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
@@ -17,7 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class ReminderListFragment : BaseFragment() {
-    //use Koin to retrieve the ViewModel instance
+
     override val _viewModel: RemindersListViewModel by viewModel()
 
     private lateinit var binding: FragmentRemindersBinding
@@ -53,12 +52,10 @@ class ReminderListFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        //load the reminders list on the ui
         _viewModel.loadReminders()
     }
 
     private fun navigateToAddReminder() {
-        //use the navigationCommand live data to navigate between the fragments
         _viewModel.navigationCommand.postValue(
             NavigationCommand.To(
                 ReminderListFragmentDirections.toSaveReminder()
@@ -70,7 +67,6 @@ class ReminderListFragment : BaseFragment() {
         val adapter = RemindersListAdapter {
         }
 
-//        setup the recycler view using the extension function
         binding.reminderssRecyclerView.setup(adapter)
     }
 
@@ -85,6 +81,9 @@ class ReminderListFragment : BaseFragment() {
                         .addOnFailureListener { Timber.d(it, "User ${user.email} logout failed") }
                 }
             }
+            R.id.clearAllReminders -> {
+                _viewModel.clearAllReminders()
+            }
         }
         return super.onOptionsItemSelected(item)
 
@@ -92,7 +91,6 @@ class ReminderListFragment : BaseFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-//        display logout as menu item
         inflater.inflate(R.menu.main_menu, menu)
     }
 

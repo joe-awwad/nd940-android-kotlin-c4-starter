@@ -2,15 +2,14 @@ package com.udacity.project4.locationreminders.savereminder
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.PointOfInterest
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseViewModel
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.data.ReminderDataSource
-import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
+import com.udacity.project4.locationreminders.reminderslist.asReminderDTO
 import kotlinx.coroutines.launch
 
 class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
@@ -18,21 +17,20 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     val reminderTitle = MutableLiveData<String?>()
     val reminderDescription = MutableLiveData<String>()
 
-    private val selectedPOI = MutableLiveData<PointOfInterest>()
+    private val latitude = MutableLiveData<Double>()
+    private val longitude = MutableLiveData<Double>()
 
-    val reminderSelectedLocationStr = Transformations.map(selectedPOI) {
-        it.name
+    val reminderSelectedLocationStr = MutableLiveData<String>()
+
+    private val geofencingActive = MutableLiveData(false)
+
+    fun isGeofencingActive(): Boolean {
+        return geofencingActive.value!!
     }
 
-
-    val latitude = Transformations.map(selectedPOI) {
-        it.latLng.latitude
+    fun geofencingActivated() {
+        geofencingActive.value = true
     }
-
-    val longitude = Transformations.map(selectedPOI) {
-        it.latLng.longitude
-    }
-
 
     /**
      * Clear the live data objects to start fresh next time the view model gets called
@@ -40,7 +38,9 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     fun onClear() {
         reminderTitle.value = null
         reminderDescription.value = null
-        selectedPOI.value = null
+        reminderSelectedLocationStr.value = null
+        latitude.value = null
+        longitude.value = null
     }
 
     /**
@@ -58,18 +58,10 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     fun saveReminder(reminderData: ReminderDataItem) {
         showLoading.value = true
         viewModelScope.launch {
-            dataSource.saveReminder(
-                ReminderDTO(
-                    reminderData.title,
-                    reminderData.description,
-                    reminderData.location,
-                    reminderData.latitude,
-                    reminderData.longitude,
-                    reminderData.id
-                )
-            )
+            dataSource.saveReminder(reminderData.asReminderDTO())
             showLoading.value = false
-            showToast.value = app.getString(R.string.reminder_saved)
+            showToast.value =
+                app.getString(R.string.geofence_added_for_location, reminderData.location)
             navigationCommand.value = NavigationCommand.Back
         }
     }
@@ -87,10 +79,23 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
             showSnackBarInt.value = R.string.err_select_location
             return false
         }
+
         return true
     }
 
     fun setSelectedPoi(poi: PointOfInterest) {
-        selectedPOI.value = poi
+        reminderSelectedLocationStr.value = poi.name
+        latitude.value = poi.latLng.latitude
+        longitude.value = poi.latLng.longitude
+    }
+
+    internal fun getReminderDataItem(): ReminderDataItem {
+        return ReminderDataItem(
+            title = reminderTitle.value,
+            description = reminderDescription.value,
+            location = reminderSelectedLocationStr.value,
+            latitude = latitude.value,
+            longitude = longitude.value,
+        )
     }
 }

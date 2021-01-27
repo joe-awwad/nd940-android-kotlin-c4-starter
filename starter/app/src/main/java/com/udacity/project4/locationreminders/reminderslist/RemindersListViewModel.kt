@@ -3,18 +3,26 @@ package com.udacity.project4.locationreminders.reminderslist
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.GeofencingClient
 import com.udacity.project4.base.BaseViewModel
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class RemindersListViewModel(
     app: Application,
     private val dataSource: ReminderDataSource
 ) : BaseViewModel(app) {
-    // list that holds the reminder data to be displayed on the UI
+
     val remindersList = MutableLiveData<List<ReminderDataItem>>()
+
+    private val geofencingClient: GeofencingClient by lazy {
+        GeofencingClient(app.applicationContext)
+    }
 
     /**
      * Get all the reminders from the DataSource and add them to the remindersList to be shown on the UI,
@@ -52,10 +60,53 @@ class RemindersListViewModel(
         }
     }
 
+    fun clearAllReminders() {
+        viewModelScope.launch {
+
+            when (val result = dataSource.getReminders()) {
+                is Result.Success -> {
+                    val geofenceIds = result.data.map { it.id }
+                    if (geofenceIds.isNotEmpty()) {
+                        geofencingClient.removeGeofences(geofenceIds)
+                            .addOnFailureListener { e ->
+                                Timber.d(e, "Failed to remove reminder geofences")
+                            }
+                            .addOnSuccessListener {
+                                clearAllRemindersFromLocalDb()
+                            }
+                    }
+                }
+                else -> Timber.d("Failed to remove reminder geofences")
+            }
+        }
+    }
+
+    private fun clearAllRemindersFromLocalDb() {
+        if (!remindersList.value.isNullOrEmpty()) {
+            viewModelScope.launch {
+                doWhileLoading {
+                    withContext(Dispatchers.IO) {
+                        dataSource.deleteAllReminders()
+                        showToast.postValue("Reminders cleared.")
+                    }
+                }
+                loadReminders()
+            }
+        }
+    }
+
     /**
      * Inform the user that there's not any data if the remindersList is empty
      */
     private fun invalidateShowNoData() {
         showNoData.value = remindersList.value == null || remindersList.value!!.isEmpty()
+    }
+
+    private suspend fun doWhileLoading(block: suspend () -> Unit) {
+        showLoading.postValue(true)
+
+        block()
+
+        showLoading.postValue(false)
     }
 }

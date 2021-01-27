@@ -100,8 +100,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             setPoiClickListener(googleMap)
 
         } else {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
+            @Suppress("DEPRECATION")
+            requestPermissions(
                 arrayOf(ACCESS_FINE_LOCATION),
                 ACCESS_FINE_LOCATION_REQUEST_CODE
             )

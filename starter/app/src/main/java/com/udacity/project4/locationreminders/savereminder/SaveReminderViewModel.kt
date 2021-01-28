@@ -62,7 +62,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
             showLoading.value = false
             showToast.value =
                 app.getString(R.string.geofence_added_for_location, reminderData.location)
-            navigationCommand.value = NavigationCommand.Back
+            navigationCommand.value = NavigationCommand.BackTo(R.id.reminderListFragment)
         }
     }
 

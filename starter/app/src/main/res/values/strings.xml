@@ -48,4 +48,5 @@
     <string name="location_access_denied_title">Access to Location Denied</string>
     <string name="location_access_denied_description">"The app need access to your location to correctly set the reminders."</string>
     <string name="geofence_added_for_location">Geofence added for location: %s</string>
+    <string name="add_reminder_button">Add reminder button</string>
 </resources>

@@ -11,6 +11,9 @@
         <action
             android:id="@+id/to_save_reminder"
             app:destination="@id/saveReminderFragment" />
+        <action
+            android:id="@+id/action_reminderListFragment_to_reminderDescriptionActivity"
+            app:destination="@id/reminderDescriptionActivity" />
     </fragment>
     <activity
         android:id="@+id/mainActivity"
@@ -37,5 +40,13 @@
             app:popUpTo="@id/saveReminderFragment"
             app:popUpToInclusive="false" />
     </fragment>
+    <activity
+        android:id="@+id/reminderDescriptionActivity"
+        android:name="com.udacity.project4.locationreminders.ReminderDescriptionActivity"
+        android:label="ReminderDescriptionActivity" >
+        <argument
+            android:name="EXTRA_ReminderDataItem"
+            app:argType="com.udacity.project4.locationreminders.reminderslist.ReminderDataItem" />
+    </activity>
 
 </navigation>

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.GeofencingClient
 import com.udacity.project4.base.BaseViewModel
+import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
@@ -22,6 +23,15 @@ class RemindersListViewModel(
 
     private val geofencingClient: GeofencingClient by lazy {
         GeofencingClient(app.applicationContext)
+    }
+
+    fun navigateToReminderDetails(dataItem: ReminderDataItem) {
+        navigationCommand.value =
+            NavigationCommand.To(
+                ReminderListFragmentDirections.actionReminderListFragmentToReminderDescriptionActivity(
+                    dataItem
+                )
+            )
     }
 
     /**

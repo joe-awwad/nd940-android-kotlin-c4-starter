@@ -78,7 +78,10 @@ class ReminderListFragment : BaseFragment() {
                 user?.let {
                     AuthUI.getInstance()
                         .signOut(requireContext())
-                        .addOnCompleteListener { Timber.d("User ${user.email} logged out") }
+                        .addOnCompleteListener {
+                            Timber.d("User ${user.email} logged out")
+                            _viewModel.navigateToAuthenticationActivity()
+                        }
                         .addOnFailureListener { Timber.d(it, "User ${user.email} logout failed") }
                 }
             }

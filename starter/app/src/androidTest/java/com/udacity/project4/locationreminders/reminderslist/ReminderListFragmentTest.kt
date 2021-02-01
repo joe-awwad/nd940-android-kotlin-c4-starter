@@ -114,7 +114,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest(), KoinComponent {
             )
 
         verify(navController).navigate(
-            ReminderListFragmentDirections.actionReminderListFragmentToReminderDescriptionActivity(
+            ReminderListFragmentDirections.toReminderDescriptionActivity(
                 reminder2.asReminderDataItem()
             )
         )

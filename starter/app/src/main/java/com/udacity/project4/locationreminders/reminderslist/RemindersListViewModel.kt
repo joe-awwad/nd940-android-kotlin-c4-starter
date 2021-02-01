@@ -28,10 +28,15 @@ class RemindersListViewModel(
     fun navigateToReminderDetails(dataItem: ReminderDataItem) {
         navigationCommand.value =
             NavigationCommand.To(
-                ReminderListFragmentDirections.actionReminderListFragmentToReminderDescriptionActivity(
+                ReminderListFragmentDirections.toReminderDescriptionActivity(
                     dataItem
                 )
             )
+    }
+
+    fun navigateToAuthenticationActivity() {
+        navigationCommand.value =
+            NavigationCommand.To(ReminderListFragmentDirections.toAuthenticationActivity())
     }
 
     /**

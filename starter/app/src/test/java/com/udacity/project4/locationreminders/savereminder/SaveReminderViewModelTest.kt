@@ -1,5 +1,6 @@
 package com.udacity.project4.locationreminders.savereminder
 
+import android.app.Application
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
@@ -62,6 +63,17 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
         result as Success<ReminderDTO>
 
         assertThat(result.data.id, `is`(reminder.id))
+    }
+
+    @Test
+    fun shouldShowToastMessage_OnSaveReminder() = mainCoroutineRule.runBlockingTest {
+        val reminder = ReminderDataItem("TITLE", "DESCRIPTION", "LOCATION", 0.0, 0.0)
+        viewModel.saveReminder(reminder)
+
+        assertThat(
+            viewModel.showToast.getOrAwaitValue(),
+            `is`(viewModel.app.getString(R.string.geofence_added_for_location, reminder.location))
+        )
     }
 
     @Test

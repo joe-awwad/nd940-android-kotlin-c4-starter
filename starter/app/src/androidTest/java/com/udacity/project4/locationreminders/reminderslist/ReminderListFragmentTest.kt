@@ -92,7 +92,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest(), KoinComponent {
     }
 
     @Test
-    fun shouldNavigateToSelectedReminderDetails() = runBlockingTest {
+    fun shouldNavigateToSelectedReminderDetails_OnReminderClicked() = runBlockingTest {
         val reminder1 = ReminderDTO("TITLE1", "DESCRIPTION1", "LOCATION1", 0.0, 0.0)
         val reminder2 = ReminderDTO("TITLE2", "DESCRIPTION2", "LOCATION2", 0.0, 0.0)
 

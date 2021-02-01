@@ -9,6 +9,7 @@ import androidx.test.filters.SmallTest
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PointOfInterest
 import com.udacity.project4.R
+import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.MainCoroutineRule
 import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.data.ReminderDataSource
@@ -73,6 +74,17 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
         assertThat(
             viewModel.showToast.getOrAwaitValue(),
             `is`(viewModel.app.getString(R.string.geofence_added_for_location, reminder.location))
+        )
+    }
+
+    @Test
+    fun shouldNavigateToReminderListFragment_OnSaveReminder() = mainCoroutineRule.runBlockingTest {
+        val reminder = ReminderDataItem("TITLE", "DESCRIPTION", "LOCATION", 0.0, 0.0)
+        viewModel.saveReminder(reminder)
+
+        assertThat(
+            viewModel.navigationCommand.getOrAwaitValue(),
+            `is`(NavigationCommand.BackTo(R.id.reminderListFragment))
         )
     }
 

@@ -4,13 +4,15 @@ import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.MainCoroutineRule
 import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -68,7 +70,7 @@ class RemindersListViewModelTest : AutoCloseKoinTest() {
 
 
     @Test
-    fun shouldSHowErrorMessage_OnLoadRemindersError() = mainCoroutineRule.runBlockingTest {
+    fun shouldShowErrorMessage_OnLoadRemindersError() = mainCoroutineRule.runBlockingTest {
         reminderDataSource.shouldReturnError = true
 
         viewModel.loadReminders()
@@ -87,5 +89,42 @@ class RemindersListViewModelTest : AutoCloseKoinTest() {
         mainCoroutineRule.resumeDispatcher()
 
         assertThat(viewModel.showLoading.getOrAwaitValue(), `is`(false))
+    }
+
+    @Test
+    fun shouldNavigateToAuthenticationActivity() = mainCoroutineRule.runBlockingTest {
+        viewModel.navigateToAuthenticationActivity()
+
+        assertThat(
+            viewModel.navigationCommand.getOrAwaitValue(), `is`(
+                NavigationCommand.To(ReminderListFragmentDirections.toAuthenticationActivity())
+            )
+        )
+    }
+
+    @Test
+    fun shouldNavigateToSaveReminder() = mainCoroutineRule.runBlockingTest {
+        viewModel.navigateToSaveReminder()
+
+        assertThat(
+            viewModel.navigationCommand.getOrAwaitValue(), `is`(
+                NavigationCommand.To(ReminderListFragmentDirections.toSaveReminder())
+            )
+        )
+    }
+
+    @Test
+    fun shouldNavigateToReminderDetails_GivenDataItem() = mainCoroutineRule.runBlockingTest {
+        val dataItem = ReminderDataItem("TITLE", "DESCRIPTION", "LOCATION", 0.0, 0.0)
+        viewModel.navigateToReminderDetails(dataItem)
+
+
+        assertThat(
+            viewModel.navigationCommand.getOrAwaitValue(), `is`(
+                NavigationCommand.To(
+                    ReminderListFragmentDirections.toReminderDescriptionActivity(dataItem)
+                )
+            )
+        )
     }
 }

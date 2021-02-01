@@ -70,7 +70,7 @@ class SaveReminderFragment : BaseFragment() {
 
         binding.selectLocation.setOnClickListener {
             _viewModel.navigationCommand.value =
-                NavigationCommand.To(SaveReminderFragmentDirections.actionSaveReminderFragmentToSelectLocationFragment())
+                NavigationCommand.To(SaveReminderFragmentDirections.toSelectLocationFragment())
         }
 
         binding.saveReminder.setOnClickListener {

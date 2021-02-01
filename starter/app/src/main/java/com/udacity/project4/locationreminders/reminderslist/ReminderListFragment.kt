@@ -56,11 +56,7 @@ class ReminderListFragment : BaseFragment() {
     }
 
     private fun navigateToAddReminder() {
-        _viewModel.navigationCommand.postValue(
-            NavigationCommand.To(
-                ReminderListFragmentDirections.toSaveReminder()
-            )
-        )
+        _viewModel.navigateToSaveReminder()
     }
 
     private fun setupRecyclerView() {

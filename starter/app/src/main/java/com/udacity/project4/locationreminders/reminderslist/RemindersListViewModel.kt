@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.GeofencingClient
+import com.udacity.project4.R
 import com.udacity.project4.base.BaseViewModel
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.data.ReminderDataSource
@@ -15,7 +16,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class RemindersListViewModel(
-    app: Application,
+    val app: Application,
     private val dataSource: ReminderDataSource
 ) : BaseViewModel(app) {
 
@@ -39,6 +40,14 @@ class RemindersListViewModel(
             NavigationCommand.To(ReminderListFragmentDirections.toAuthenticationActivity())
     }
 
+
+    fun navigateToSaveReminder(){
+        navigationCommand.postValue(
+            NavigationCommand.To(
+                ReminderListFragmentDirections.toSaveReminder()
+            )
+        )
+    }
     /**
      * Get all the reminders from the DataSource and add them to the remindersList to be shown on the UI,
      * or show error if any
@@ -102,7 +111,7 @@ class RemindersListViewModel(
                 doWhileLoading {
                     withContext(Dispatchers.IO) {
                         dataSource.deleteAllReminders()
-                        showToast.postValue("Reminders cleared.")
+                        showToast.postValue(app.getString(R.string.reminders_cleared))
                     }
                 }
                 loadReminders()

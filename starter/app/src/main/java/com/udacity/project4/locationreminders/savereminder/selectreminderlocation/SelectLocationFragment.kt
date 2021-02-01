@@ -8,7 +8,6 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.Location
 import android.os.Bundle
 import android.view.*
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -29,6 +28,7 @@ import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.util.*
 
 /**
  * Adapts code from https://github.com/googlemaps/android-samples/tree/master/tutorials/kotlin/CurrentPlaceDetailsOnMap
@@ -67,10 +67,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(true)
 
-        binding.saveLocationBtn.setOnClickListener {
-            onLocationSelected()
-        }
-
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireContext())
 
@@ -81,10 +77,15 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
+
+        binding.selectLocationBtn.setOnClickListener {
+            onLocationSelected()
+        }
     }
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        googleMap.setContentDescription(getString(R.string.google_maps_poi_selection))
 
         enableMyLocation()
     }
@@ -98,6 +99,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             getDeviceLocation(googleMap)
 
             setPoiClickListener(googleMap)
+
+            setLongClickListener(googleMap)
 
         } else {
             @Suppress("DEPRECATION")
@@ -186,6 +189,23 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 MarkerOptions()
                     .position(it.latLng)
                     .title(it.name)
+            )
+        }
+    }
+
+    private fun setLongClickListener(map: GoogleMap) {
+        map.setOnMapLongClickListener {
+            selectedPoi = PointOfInterest(
+                it,
+                UUID.randomUUID().toString(),
+                "Lat: ${it.latitude}, Long: ${it.longitude}"
+            )
+
+            selectedMarker?.remove()
+            selectedMarker = map.addMarker(
+                MarkerOptions()
+                    .position(selectedPoi!!.latLng)
+                    .title(selectedPoi!!.name)
             )
         }
     }

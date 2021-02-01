@@ -49,4 +49,6 @@
     <string name="location_access_denied_description">"The app need access to your location to correctly set the reminders."</string>
     <string name="geofence_added_for_location">Geofence added for location: %s</string>
     <string name="add_reminder_button">Add reminder button</string>
+    <string name="google_maps_poi_selection">Google maps POI selection</string>
+    <string name="reminder_location_label">Reminder location label</string>
 </resources>

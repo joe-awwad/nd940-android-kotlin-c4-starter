@@ -41,18 +41,11 @@ class SaveReminderFragment : BaseFragment() {
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSaveReminderBinding
 
-    private val runningQOrLater =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+    private val runningQOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     private lateinit var geofencingClient: GeofencingClient
 
-    private val geofencePendingIntent: PendingIntent by lazy {
-        val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
-            .apply {
-                action = SAVE_GEOFENCE_ACTION
-            }
-        PendingIntent.getBroadcast(requireContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-    }
+    private lateinit var geofencePendingIntent: PendingIntent
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,6 +88,20 @@ class SaveReminderFragment : BaseFragment() {
 
         }
 
+        initializeGeofencingPendingIntent()
+    }
+
+    private fun initializeGeofencingPendingIntent() {
+        val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
+            .apply {
+                action = SAVE_GEOFENCE_ACTION
+            }
+        geofencePendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            1,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 
     override fun onDestroy() {

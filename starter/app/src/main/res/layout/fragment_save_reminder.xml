@@ -43,6 +43,7 @@
             android:autofillHints="description" />
 
         <TextView
+            android:contentDescription="@string/reminder_location_label"
             android:id="@+id/selectLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

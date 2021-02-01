@@ -48,6 +48,7 @@ class AuthenticationActivity : AppCompatActivity() {
 
             if (resultCode == Activity.RESULT_OK) {
                 goToRemindersActivity()
+                finish()
             } else {
                 Timber.i("Sign in unsuccessful ${response?.error?.errorCode}")
             }
